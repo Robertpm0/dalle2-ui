@@ -1,32 +1,27 @@
 import Head from "next/head";
 import { useState } from "react";
 import React, {useEffect} from "react";
-import { emojiCursor } from "cursor-effects";
 import styles from "../styles/Home.module.css";
 import { rainbowCursor } from "cursor-effects";
-import  { Dalle } from 'dalle-node';
+import Moralis from "moralis/types";
+
 export default function Home() {
   const [token, setToken] = useState("");
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [addy, setAddy] = useState("");
 
   useEffect(() => {
-    new rainbowCursor({length: 3, colors: ['red', 'blue'], size: 4});
+    new rainbowCursor({length: 25, colors: ['red', 'blue'], size: 18});
   });
 
-  async function getDallee() {
-    setError(false);
-    setLoading(true);
-    
-    const dalle = new Dalle(`${token}`);
-    const generations = await dalle.generate(`${query}`);
-    console.log(generations)
-    setResults(generations)
-    setLoading(false)
+ async function mintButton(data) {
+  console.log(data);
 
-  }
+  useMoralis
+  };
 
   function getDalle2() {
     setError(false);
@@ -42,13 +37,14 @@ export default function Home() {
       .then((data) => {
         setResults(data.result);
         setLoading(false);
-        console.log(data.result.generations.image_path)
       })
       .catch((err) => {
         console.log(err);
         setLoading(false);
         setError(true);
       });
+
+
   }
 
   return (
@@ -76,8 +72,16 @@ export default function Home() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Query"
+          />{" "}
+          <input
+            id="addy"
+            type="text"
+            value={addy}
+            onChange={(e) => setAddy(e.target.value)}
+            placeholder="Address"
           />
-          <button className={styles} onClick={getDallee}>Get 4 Images</button>
+
+          <button className={styles} onClick={getDalle2}>Get 4 Images</button>
         </p>{" "}
         {error ? (
           <div className={styles.error}>Something went wrong. .Try again</div>
@@ -93,6 +97,9 @@ export default function Home() {
                   className={styles.imgPreview}
                   src={result.generation.image_path}
                 />
+                <div onClick={mintButton(result.generation.image_path)}>
+                click to mint
+                </div>
               </div>
             );
           })}
